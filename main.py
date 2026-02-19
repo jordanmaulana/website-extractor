@@ -23,6 +23,50 @@ def sanitize_filename(url: str) -> str:
     return name or "extracted_content"
 
 
+def extract_images_from_markdown(markdown_content: str) -> tuple[str, list[str]]:
+    """Extract image URLs from markdown and return cleaned content + images list."""
+    images: list[str] = []
+
+    # Find markdown images ![alt](url)
+    md_images = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", markdown_content)
+    for _, url in md_images:
+        images.append(url.strip())
+
+    # Remove markdown images from content
+    content = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", "", markdown_content)
+
+    # Find bare image URLs
+    image_extensions = (
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".webp",
+        ".svg",
+        ".bmp",
+        ".ico",
+        ".tiff",
+        ".avif",
+    )
+    bare_urls = re.findall(r"https?://[^\s\)\]\>\"\']+", content)
+
+    for url in bare_urls:
+        url_lower = url.lower().split("?")[0]
+        if url_lower.endswith(image_extensions):
+            images.append(url)
+
+    # Remove bare image URLs from content (replace with empty string)
+    for url in images:
+        content = content.replace(url, "")
+
+    # Clean up multiple newlines and spaces
+    content = re.sub(r"\n{3,}", "\n\n", content)
+    content = re.sub(r" {2,}", " ", content)
+    content = content.strip()
+
+    return content, images
+
+
 def extract_urls_from_markdown(markdown_content: str, base_url: str) -> set[str]:
     """Extract HTTP URLs from markdown content, filtering to only same-domain URLs."""
     urls = set()
@@ -117,9 +161,15 @@ def extract_url_content(
                 cleaned_lines.append(line)
         markdown_content = "\n".join(cleaned_lines).strip()
 
-        # Add to results
-        results.append({"url": url, "content": markdown_content})
-        print(f"  ✓ Extracted: {url}")
+        # Extract images and clean content
+        cleaned_content, images = extract_images_from_markdown(markdown_content)
+
+        # Add to results with images array
+        result = {"url": url, "content": cleaned_content}
+        if images:
+            result["images"] = images
+        results.append(result)
+        print(f"  ✓ Extracted: {url} ({len(images)} images)")
 
         # Recursively extract linked URLs
         if recursive and depth < max_depth:
