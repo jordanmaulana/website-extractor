@@ -4,6 +4,7 @@
 import json
 import sys
 import re
+import time
 from urllib.parse import urlparse
 from pathlib import Path
 
@@ -205,6 +206,7 @@ def main():
         recursive = False
 
     try:
+        start_time = time.time()
         print(f"Extracting from: {url}")
         results: list[dict] = []
         visited: set[str] = set()
@@ -227,7 +229,10 @@ def main():
         output_path.write_text(
             json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8"
         )
+
+        elapsed = time.time() - start_time
         print(f"\n✓ Saved {len(results)} page(s) to: {output_path}")
+        print(f"⏱  Processing time: {elapsed:.2f}s")
 
     except requests.RequestException as e:
         print(f"✗ Network error: {e}")
