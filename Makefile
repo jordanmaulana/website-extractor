@@ -29,3 +29,6 @@ tw-build:
 
 web:
 	cd frontend && pnpm run dev
+
+test:
+	uv run python main.py https://sisi.id

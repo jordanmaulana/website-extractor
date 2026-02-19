@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Extract URL content and save to Markdown file."""
+"""Extract URL content and save to JSON file."""
 
+import json
 import sys
 import re
 from urllib.parse import urlparse
@@ -72,106 +73,70 @@ def extract_urls_from_markdown(markdown_content: str, base_url: str) -> set[str]
     return urls
 
 
-def extract_url_to_markdown(
+def extract_url_content(
     url: str,
-    output_dir: Path = Path("."),
-    visited: set[str] | None = None,
+    results: list[dict],
+    visited: set[str],
     recursive: bool = True,
     depth: int = 0,
     max_depth: int = 2,
-) -> Path | None:
-    """Fetch URL content and save as Markdown file."""
-    if visited is None:
-        visited = set()
-
+) -> None:
+    """Fetch URL content and add to results list. Recursively extract linked URLs."""
     # Skip if already visited
     if url in visited:
-        return None
+        return
     visited.add(url)
 
     if not url.startswith(("http://", "https://")):
-        raise ValueError("URL must start with http:// or https://")
+        return
 
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.0"
-    }
-    response = requests.get(url, headers=headers, timeout=30, verify=False)
-    response.raise_for_status()
+    try:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.0"
+        }
+        response = requests.get(url, headers=headers, timeout=30, verify=False)
+        response.raise_for_status()
 
-    soup = BeautifulSoup(response.content, "html.parser")
+        soup = BeautifulSoup(response.content, "html.parser")
 
-    for element in soup(["script", "style", "nav", "footer", "header"]):
-        element.decompose()
+        for element in soup(["script", "style", "nav", "footer", "header"]):
+            element.decompose()
 
-    main_content = soup.find("main") or soup.find("article") or soup.find("body")
-    if not main_content:
-        main_content = soup
+        main_content = soup.find("main") or soup.find("article") or soup.find("body")
+        if not main_content:
+            main_content = soup
 
-    html_content = str(main_content)
-    markdown_content = md(html_content, heading_style="ATX")
+        html_content = str(main_content)
+        markdown_content = md(html_content, heading_style="ATX")
 
-    lines = markdown_content.split("\n")
-    cleaned_lines = []
-    for line in lines:
-        stripped = line.strip()
-        if stripped or cleaned_lines:
-            cleaned_lines.append(line)
-    markdown_content = "\n".join(cleaned_lines).strip()
+        lines = markdown_content.split("\n")
+        cleaned_lines = []
+        for line in lines:
+            stripped = line.strip()
+            if stripped or cleaned_lines:
+                cleaned_lines.append(line)
+        markdown_content = "\n".join(cleaned_lines).strip()
 
-    title = soup.find("title")
-    title_text = title.get_text().strip() if title else "Untitled"
+        # Add to results
+        results.append({"url": url, "content": markdown_content})
+        print(f"  ✓ Extracted: {url}")
 
-    # Extract linked URLs if recursive and within depth limit
-    extracted_links: list[str] = []
-    if recursive and depth < max_depth:
-        linked_urls = extract_urls_from_markdown(markdown_content, url)
-        if linked_urls:
-            links_dir = output_dir / "linked"
-            links_dir.mkdir(exist_ok=True)
-
+        # Recursively extract linked URLs
+        if recursive and depth < max_depth:
+            linked_urls = extract_urls_from_markdown(markdown_content, url)
             for linked_url in linked_urls:
                 if linked_url not in visited:
-                    try:
-                        result = extract_url_to_markdown(
-                            linked_url,
-                            output_dir=links_dir,
-                            visited=visited,
-                            recursive=recursive,
-                            depth=depth + 1,
-                            max_depth=max_depth,
-                        )
-                        if result:
-                            extracted_links.append(f"- {linked_url} → {result.name}")
-                    except Exception as e:
-                        extracted_links.append(f"- {linked_url} → Error: {e}")
+                    extract_url_content(
+                        linked_url,
+                        results,
+                        visited,
+                        recursive=recursive,
+                        depth=depth + 1,
+                        max_depth=max_depth,
+                    )
 
-    links_section = ""
-    if extracted_links:
-        links_section = "\n\n## Linked Pages Extracted\n\n" + "\n".join(extracted_links)
-
-    depth_line = f"  \n**Depth:** {depth}" if depth > 0 else ""
-
-    final_content = f"""# {title_text}
-
-**Source:** {url}  
-**Extracted:** {__import__("datetime").datetime.now().strftime("%Y-%m-%d %H:%M:%S")}{depth_line}
-
----
-
-{markdown_content}{links_section}
-"""
-
-    filename = sanitize_filename(url) + ".md"
-    output_path = output_dir / filename
-
-    counter = 1
-    original_path = output_path
-    while output_path.exists():
-        output_path = original_path.with_name(f"{sanitize_filename(url)}_{counter}.md")
-        counter += 1
-
-    output_path.write_text(final_content, encoding="utf-8")
-    return output_path
+    except Exception as e:
+        print(f"  ✗ Error extracting {url}: {e}")
 
 
 def main():
@@ -190,9 +155,30 @@ def main():
         recursive = False
 
     try:
-        output_file = extract_url_to_markdown(url, recursive=recursive)
-        if output_file:
-            print(f"✓ Content saved to: {output_file}")
+        print(f"Extracting from: {url}")
+        results: list[dict] = []
+        visited: set[str] = set()
+
+        extract_url_content(url, results, visited, recursive=recursive)
+
+        # Generate output filename
+        filename = sanitize_filename(url) + ".json"
+        output_path = Path(filename)
+
+        counter = 1
+        original_path = output_path
+        while output_path.exists():
+            output_path = original_path.with_name(
+                f"{sanitize_filename(url)}_{counter}.json"
+            )
+            counter += 1
+
+        # Write JSON file with all results
+        output_path.write_text(
+            json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+        print(f"\n✓ Saved {len(results)} page(s) to: {output_path}")
+
     except requests.RequestException as e:
         print(f"✗ Network error: {e}")
         sys.exit(1)
