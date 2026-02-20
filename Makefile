@@ -32,3 +32,6 @@ web:
 
 test:
 	uv run python main.py https://sisi.id
+
+test-images:
+	uv run python main.py https://sisi.id --include-images

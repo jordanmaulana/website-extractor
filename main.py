@@ -126,6 +126,7 @@ def extract_url_content(
     recursive: bool = True,
     depth: int = 0,
     max_depth: int = 2,
+    include_images: bool = False,
 ) -> None:
     """Fetch URL content and add to results list. Recursively extract linked URLs."""
     # Skip if already visited
@@ -166,12 +167,14 @@ def extract_url_content(
         markdown_content = "\n".join(cleaned_lines).strip()
 
         # Extract images and clean content
-        cleaned_content, images = extract_images_from_markdown(markdown_content)
+        if include_images:
+            cleaned_content, images = extract_images_from_markdown(markdown_content)
+        else:
+            cleaned_content = markdown_content
+            images = []
 
         # Add to results with images array
-        result = {"url": url, "content": cleaned_content}
-        if images:
-            result["images"] = images
+        result = {"url": url, "content": cleaned_content, "images": images}
         results.append(result)
         print(f"  ✓ Extracted: {url} ({len(images)} images)")
 
@@ -187,6 +190,7 @@ def extract_url_content(
                         recursive=recursive,
                         depth=depth + 1,
                         max_depth=max_depth,
+                        include_images=include_images,
                     )
 
     except Exception as e:
@@ -208,13 +212,17 @@ def main():
     if "--no-recursive" in sys.argv:
         recursive = False
 
+    include_images = "--include-images" in sys.argv
+
     try:
         start_time = time.time()
         print(f"Extracting from: {url}")
         results: list[dict] = []
         visited: set[str] = set()
 
-        extract_url_content(url, results, visited, recursive=recursive)
+        extract_url_content(
+            url, results, visited, recursive=recursive, include_images=include_images
+        )
 
         # Generate output filename
         filename = sanitize_filename(url) + ".json"
