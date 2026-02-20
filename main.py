@@ -8,6 +8,7 @@ import time
 from urllib.parse import urlparse
 from pathlib import Path
 
+import certifi
 import requests
 from bs4 import BeautifulSoup
 from markdownify import markdownify as md
@@ -139,7 +140,9 @@ def extract_url_content(
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.0"
         }
-        response = requests.get(url, headers=headers, timeout=30, verify=False)
+        response = requests.get(
+            url, headers=headers, timeout=30, verify=certifi.where()
+        )
         response.raise_for_status()
 
         soup = BeautifulSoup(response.content, "html.parser")
