@@ -35,3 +35,15 @@ test:
 
 test-images:
 	uv run python main.py https://sisi.id --include-images
+
+worker:
+	uv run celery -A celery_app worker --loglevel=info --concurrency=4
+
+worker-daemon:
+	uv run celery -A celery_app worker --loglevel=info --concurrency=4 --detach
+
+flower:
+	uv run celery -A celery_app flower --port=5555
+
+redis:
+	redis-server --port 6379
