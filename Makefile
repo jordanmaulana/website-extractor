@@ -31,7 +31,7 @@ web:
 	cd frontend && pnpm run dev
 
 test:
-	uv run python main.py https://help.libreoffice.org/latest/en-US/text/shared/05/new_help.html --selenium
+	uv run python main.py https://sisi.id --selenium
 
 test-images:
 	uv run python main.py https://sisi.id --include-images

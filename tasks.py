@@ -8,7 +8,6 @@ from urllib.parse import urlparse
 import certifi
 import requests
 from bs4 import BeautifulSoup
-from celery import shared_task
 from markdownify import markdownify as md
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -16,6 +15,8 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
+
+from celery_app import app
 
 
 def sanitize_filename(url: str) -> str:
@@ -175,12 +176,16 @@ def fetch_page_content(url: str, use_selenium: bool = False) -> str:
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.0"
     }
-    response = requests.get(url, headers=headers, timeout=30, verify=certifi.where())
+    try:
+        response = requests.get(url, headers=headers, timeout=30, verify=certifi.where())
+    except requests.exceptions.SSLError:
+        # Fallback to system certificates if certifi fails
+        response = requests.get(url, headers=headers, timeout=30, verify=True)
     response.raise_for_status()
     return response.text
 
 
-@shared_task(bind=True, max_retries=3, default_retry_delay=60)
+@app.task(bind=True, max_retries=3, default_retry_delay=60)
 def extract_single_url(
     self,
     url: str,
@@ -228,7 +233,6 @@ def extract_single_url(
         raise self.retry(exc=exc)
 
 
-@shared_task
 def extract_website_recursive(
     start_url: str,
     max_depth: int = 5,
@@ -288,7 +292,7 @@ def extract_website_recursive(
     return results
 
 
-@shared_task
+@app.task
 def save_results_to_json(results: list[dict], url: str) -> str:
     """Save extraction results to JSON file."""
     from pathlib import Path

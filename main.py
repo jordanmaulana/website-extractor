@@ -33,21 +33,14 @@ def main():
         print("  (Using Celery for parallel processing)")
         print()
 
-        # Queue the recursive extraction task
+        # Call the recursive extraction function directly (not as a task)
         max_depth = 5 if recursive else 0
-        task = extract_website_recursive.delay(
+        results = extract_website_recursive(
             start_url=url,
             max_depth=max_depth,
             include_images=include_images,
             use_selenium=use_selenium,
         )
-
-        print(f"Task queued: {task.id}")
-        print("Waiting for completion...")
-        print()
-
-        # Wait for result
-        results = task.get()
 
         # Save results
         save_task = save_results_to_json.delay(results, url)
