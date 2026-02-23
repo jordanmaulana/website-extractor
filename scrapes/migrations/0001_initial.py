@@ -7,7 +7,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -16,41 +15,82 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Scrape',
+            name="Scrape",
             fields=[
-                ('id', models.CharField(default=core.models.make_object_id, editable=False, primary_key=True, serialize=False)),
-                ('created_on', models.DateTimeField(auto_now_add=True)),
-                ('updated_on', models.DateTimeField(auto_now=True)),
-                ('url', models.URLField()),
-                ('actor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.CharField(
+                        default=core.models.make_object_id,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("created_on", models.DateTimeField(auto_now_add=True)),
+                ("updated_on", models.DateTimeField(auto_now=True)),
+                ("url", models.URLField()),
+                (
+                    "actor",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['id'],
-                'abstract': False,
+                "ordering": ["id"],
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Website',
+            name="Website",
             fields=[
-                ('id', models.CharField(default=core.models.make_object_id, editable=False, primary_key=True, serialize=False)),
-                ('created_on', models.DateTimeField(auto_now_add=True)),
-                ('updated_on', models.DateTimeField(auto_now=True)),
-                ('url', models.URLField()),
-                ('content', models.TextField()),
-                ('actor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
-                ('scrape', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='scrapes.scrape')),
+                (
+                    "id",
+                    models.CharField(
+                        default=core.models.make_object_id,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("created_on", models.DateTimeField(auto_now_add=True)),
+                ("updated_on", models.DateTimeField(auto_now=True)),
+                ("url", models.URLField()),
+                ("content", models.TextField()),
+                (
+                    "actor",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "scrape",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="scrapes.scrape"
+                    ),
+                ),
             ],
             options={
-                'ordering': ['id'],
-                'abstract': False,
+                "ordering": ["id"],
+                "abstract": False,
             },
         ),
         migrations.AddIndex(
-            model_name='scrape',
-            index=models.Index(fields=['created_on'], name='scrapes_scr_created_51e5b6_idx'),
+            model_name="scrape",
+            index=models.Index(
+                fields=["created_on"], name="scrapes_scr_created_51e5b6_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='website',
-            index=models.Index(fields=['created_on'], name='scrapes_web_created_db39a0_idx'),
+            model_name="website",
+            index=models.Index(
+                fields=["created_on"], name="scrapes_web_created_db39a0_idx"
+            ),
         ),
     ]

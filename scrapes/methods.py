@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
-"""Extract URL content and save to JSON file."""
+"""URL scraping methods with Django ORM integration."""
 
 import json
-import sys
 import re
 import time
 from urllib.parse import urlparse
@@ -18,6 +16,8 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+
+from .models import Scrape, Website
 
 
 def sanitize_filename(url: str) -> str:
@@ -183,23 +183,23 @@ def fetch_page_content(url: str, use_selenium: bool = False) -> str:
 
 
 def extract_url_content(
+    scrape: Scrape,
     url: str,
-    results: list[dict],
     visited: set[str],
     recursive: bool = True,
     depth: int = 0,
     max_depth: int = 5,
     include_images: bool = False,
     use_selenium: bool = False,
-) -> None:
-    """Fetch URL content and add to results list. Recursively extract linked URLs."""
+) -> Website | None:
+    """Fetch URL content and create Website instance. Recursively extract linked URLs."""
     # Skip if already visited
     if url in visited:
-        return
+        return None
     visited.add(url)
 
     if not url.startswith(("http://", "https://")):
-        return
+        return None
 
     try:
         # Fetch page content (using selenium if requested)
@@ -231,9 +231,16 @@ def extract_url_content(
             cleaned_content = markdown_content
             images = []
 
-        # Add to results with images array
-        result = {"url": url, "content": cleaned_content, "images": images}
-        results.append(result)
+        # Create or update Website instance in database
+        website, created = Website.objects.update_or_create(
+            url=url,
+            scrape=scrape,
+            defaults={
+                "content": cleaned_content,
+                "images": images,
+            },
+        )
+
         print(f"  ✓ Extracted: {url} ({len(images)} images)")
 
         # Recursively extract linked URLs
@@ -242,8 +249,8 @@ def extract_url_content(
             for linked_url in linked_urls:
                 if linked_url not in visited:
                     extract_url_content(
+                        scrape,
                         linked_url,
-                        results,
                         visited,
                         recursive=recursive,
                         depth=depth + 1,
@@ -252,46 +259,58 @@ def extract_url_content(
                         use_selenium=use_selenium,
                     )
 
+        return website
+
     except Exception as e:
         print(f"  ✗ Error extracting {url}: {e}")
+        return None
 
 
-def main():
-    """Main entry point."""
-    if len(sys.argv) < 2:
-        url = input("Enter URL to extract: ").strip()
-    else:
-        url = sys.argv[1]
+def scrape_website(
+    url: str,
+    recursive: bool = True,
+    max_depth: int = 5,
+    include_images: bool = False,
+    use_selenium: bool = False,
+    save_json: bool = False,
+) -> Scrape:
+    """
+    Scrape a website starting from a URL.
 
-    if not url:
-        print("Error: No URL provided")
-        sys.exit(1)
+    Creates a Scrape instance and Website instances for each page found.
+    Returns the Scrape instance.
+    """
+    start_time = time.time()
+    print(f"Extracting from: {url}")
+    if use_selenium:
+        print("  (Using headless browser for JavaScript rendering)")
 
-    recursive = True
-    if "--no-recursive" in sys.argv:
-        recursive = False
+    # Create or get the Scrape instance
+    scrape, created = Scrape.objects.update_or_create(url=url)
 
-    include_images = "--include-images" in sys.argv
-    use_selenium = "--selenium" in sys.argv
+    visited: set[str] = set()
 
-    try:
-        start_time = time.time()
-        print(f"Extracting from: {url}")
-        if use_selenium:
-            print("  (Using headless browser for JavaScript rendering)")
-        results: list[dict] = []
-        visited: set[str] = set()
+    # Start recursive extraction
+    extract_url_content(
+        scrape,
+        url,
+        visited,
+        recursive=recursive,
+        max_depth=max_depth,
+        include_images=include_images,
+        use_selenium=use_selenium,
+    )
 
-        extract_url_content(
-            url,
-            results,
-            visited,
-            recursive=recursive,
-            include_images=include_images,
-            use_selenium=use_selenium,
-        )
+    # Get count of websites created
+    website_count = Website.objects.filter(scrape=scrape).count()
 
-        # Generate output filename
+    # Optionally save to JSON file (for backward compatibility)
+    if save_json:
+        websites = Website.objects.filter(scrape=scrape)
+        results = [
+            {"url": w.url, "content": w.content, "images": w.images} for w in websites
+        ]
+
         filename = sanitize_filename(url) + ".json"
         output_path = Path(filename)
 
@@ -303,25 +322,13 @@ def main():
             )
             counter += 1
 
-        # Write JSON file with all results
         output_path.write_text(
             json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8"
         )
-
-        elapsed = time.time() - start_time
         print(f"\n✓ Saved {len(results)} page(s) to: {output_path}")
-        print(f"⏱  Processing time: {elapsed:.2f}s")
 
-    except requests.RequestException as e:
-        print(f"✗ Network error: {e}")
-        sys.exit(1)
-    except ValueError as e:
-        print(f"✗ Error: {e}")
-        sys.exit(1)
-    except Exception as e:
-        print(f"✗ Unexpected error: {e}")
-        sys.exit(1)
+    elapsed = time.time() - start_time
+    print(f"✓ Created {website_count} Website instance(s) for scrape #{scrape.id}")
+    print(f"⏱  Processing time: {elapsed:.2f}s")
 
-
-if __name__ == "__main__":
-    main()
+    return scrape
