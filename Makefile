@@ -12,23 +12,14 @@ lint:
 dev:
 	uv run manage.py runserver 8000
 
-tele:
-	uv run python manage.py run_telegram_bot
-
 mmg:
 	uv run manage.py makemigrations
 
 migrate:
 	uv run manage.py migrate
 
-tw-run:
+tw:
 	npx @tailwindcss/cli -i ./static/input.css -o ./static/output.css --watch
-
-tw-build:
-	npx @tailwindcss/cli -i ./static/input.css -o ./static/output.css
-
-web:
-	cd frontend && pnpm run dev
 
 test:
 	uv run python main.py https://help.libreoffice.org/latest/en-US/text/shared/05/new_help.html --selenium
