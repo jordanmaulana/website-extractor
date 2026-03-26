@@ -22,7 +22,4 @@ tw:
 	npx @tailwindcss/cli -i ./static/input.css -o ./static/output.css --watch
 
 test:
-	uv run python main.py https://help.libreoffice.org/latest/en-US/text/shared/05/new_help.html --selenium
-
-test-images:
-	uv run manage.py scrape_url https://sisi.id --include-images
+	uv run python main.py https://uhudtour.com/
