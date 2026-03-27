@@ -11,3 +11,5 @@ wheels/
 
 linked/
 db.sqlite3
+
+.env
