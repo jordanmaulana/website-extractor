@@ -1,8 +1,9 @@
 from django.db import models
+from pgvector.django import HnswIndex, VectorField
+
 from core.models import BaseModel
 
 
-# Create your models here.
 class Scrape(BaseModel):
     url = models.URLField(unique=True)
 
@@ -12,14 +13,37 @@ class Website(BaseModel):
     content = models.TextField()
     images = models.JSONField(default=list, blank=True)
     scrape = models.ForeignKey(Scrape, on_delete=models.CASCADE)
-    chunks = models.JSONField(default=list, blank=True, help_text="Text chunks for RAG")
-    embeddings = models.JSONField(
-        default=list, blank=True, help_text="Embeddings for each chunk"
-    )
-    is_indexed = models.BooleanField(
-        default=False, help_text="Whether content has been indexed for RAG"
-    )
+    content_hash = models.CharField(max_length=64, blank=True, default="")
+    indexed_with_model = models.CharField(max_length=64, blank=True, default="")
 
     class Meta:
         unique_together = ["url", "scrape"]
-        indexes = [models.Index(fields=["is_indexed"])]
+
+    @property
+    def is_indexed(self) -> bool:
+        return bool(self.indexed_with_model)
+
+
+class Chunk(BaseModel):
+    website = models.ForeignKey(
+        Website, on_delete=models.CASCADE, related_name="chunk_set"
+    )
+    chunk_index = models.PositiveIntegerField()
+    text = models.TextField()
+    token_count = models.PositiveIntegerField()
+    heading_path = models.JSONField(default=list, blank=True)
+    embedding_model = models.CharField(max_length=64)
+    embedding = VectorField(dimensions=1536)
+
+    class Meta:
+        unique_together = ["website", "chunk_index"]
+        indexes = [
+            models.Index(fields=["embedding_model"]),
+            HnswIndex(
+                name="chunk_embedding_hnsw",
+                fields=["embedding"],
+                m=16,
+                ef_construction=64,
+                opclasses=["vector_cosine_ops"],
+            ),
+        ]

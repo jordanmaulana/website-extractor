@@ -83,10 +83,10 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("POSTGRES_DB", "website_extractor"),
-        "USER": os.getenv("POSTGRES_USER", "postgres"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", ""),
+        "USER": os.getenv("POSTGRES_USER", "app"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "app"),
         "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        "PORT": os.getenv("POSTGRES_PORT", "5433"),
     }
 }
 
@@ -131,3 +131,16 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+RAG = {
+    "EMBEDDING_MODEL": "text-embedding-3-small",
+    "EMBEDDING_DIMS": 1536,
+    "CHAT_MODEL": "gpt-4o-mini",
+    "CHUNK_TOKENS": 500,
+    "CHUNK_OVERLAP_TOKENS": 75,
+    "TOP_K": 5,
+    "MIN_SIMILARITY": 0.5,
+    "CHAT_TEMPERATURE": 0.2,
+    "CHAT_MAX_TOKENS": 800,
+    "EMBED_BATCH_SIZE": 100,
+}

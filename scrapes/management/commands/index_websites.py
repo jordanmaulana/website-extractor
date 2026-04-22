@@ -1,8 +1,13 @@
 """Management command to index websites for RAG."""
 
+import logging
+
 from django.core.management.base import BaseCommand
 from scrapes.models import Website
-from scrapes.rag import index_website
+from scrapes.rag import RAGEmbeddingError, index_website
+
+
+log = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -24,17 +29,25 @@ class Command(BaseCommand):
         total = websites.count()
         self.stdout.write(f"Indexing {total} website(s)...")
 
+        failures = 0
         for i, website in enumerate(websites, 1):
             try:
                 index_website(website)
                 self.stdout.write(
                     self.style.SUCCESS(f"✓ [{i}/{total}] Indexed: {website.url}")
                 )
-            except Exception as e:
+            except RAGEmbeddingError as e:
+                failures += 1
+                log.warning("Embedding failed for %s: %s", website.url, e)
                 self.stdout.write(
-                    self.style.ERROR(
-                        f"✗ [{i}/{total}] Error indexing {website.url}: {e}"
+                    self.style.WARNING(
+                        f"⚠ [{i}/{total}] Embedding failed for {website.url}: {e}"
                     )
                 )
 
-        self.stdout.write(self.style.SUCCESS("\n✓ Indexing complete!"))
+        if failures:
+            self.stdout.write(
+                self.style.WARNING(f"\n✓ Indexing complete with {failures} failure(s).")
+            )
+        else:
+            self.stdout.write(self.style.SUCCESS("\n✓ Indexing complete!"))

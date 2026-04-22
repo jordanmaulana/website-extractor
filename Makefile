@@ -22,4 +22,4 @@ tw:
 	npx @tailwindcss/cli -i ./static/input.css -o ./static/output.css --watch
 
 test:
-	uv run manage.py scrape_url https://uhudtour.com/ --include-images
+	uv run manage.py scrape_url https://uhudtour.com/

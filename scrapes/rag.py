@@ -1,116 +1,174 @@
 """RAG utilities for semantic search with website references."""
 
-import numpy as np
-from openai import OpenAI
+from __future__ import annotations
 
-from .models import Website
+import hashlib
+import logging
 
+from django.conf import settings
+from django.db import transaction
+from openai import APIError, OpenAI, RateLimitError
+from pgvector.django import CosineDistance
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
 
-client = OpenAI()
-EMBEDDING_MODEL = "text-embedding-3-small"
-CHUNK_SIZE = 500
-CHUNK_OVERLAP = 50
-
-
-def chunk_text(
-    text: str, chunk_size: int = CHUNK_SIZE, overlap: int = CHUNK_OVERLAP
-) -> list[str]:
-    """Split text into overlapping chunks."""
-    chunks = []
-    words = text.split()
-
-    current_chunk = []
-    current_length = 0
-
-    for word in words:
-        word_length = len(word) + 1
-        if current_length + word_length > chunk_size and current_chunk:
-            chunks.append(" ".join(current_chunk))
-            overlap_words = int(overlap / 5)
-            current_chunk = (
-                current_chunk[-overlap_words:]
-                if len(current_chunk) > overlap_words
-                else current_chunk
-            )
-            current_length = sum(len(w) + 1 for w in current_chunk)
-
-        current_chunk.append(word)
-        current_length += word_length
-
-    if current_chunk:
-        chunks.append(" ".join(current_chunk))
-
-    return chunks
+from .chunking import chunk_markdown
+from .models import Chunk, Website
 
 
-def generate_embeddings(texts: list[str]) -> list[list[float]]:
-    """Generate embeddings for a list of texts using OpenAI."""
-    response = client.embeddings.create(model=EMBEDDING_MODEL, input=texts)
+log = logging.getLogger(__name__)
+
+
+_SYSTEM_PROMPT = (
+    "You answer questions using only the numbered sources provided in the user "
+    "message. Cite sources inline as [1], [2], matching the numbered list. Only "
+    "cite numbers that actually appear in the context. If the sources do not "
+    "answer the question, say so plainly rather than guessing."
+)
+
+
+class RAGError(Exception):
+    """Base class for RAG errors."""
+
+
+class RAGEmbeddingError(RAGError):
+    """Raised when embedding generation fails."""
+
+
+class RAGGenerationError(RAGError):
+    """Raised when chat completion fails."""
+
+
+_openai_client: OpenAI | None = None
+
+
+def _client() -> OpenAI:
+    """Construct the OpenAI client on first use and cache it."""
+    global _openai_client
+    if _openai_client is None:
+        _openai_client = OpenAI()
+    return _openai_client
+
+
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, max=30),
+    retry=retry_if_exception_type((RateLimitError, APIError)),
+    reraise=True,
+)
+def _embed_batch(texts: list[str]) -> list[list[float]]:
+    response = _client().embeddings.create(
+        model=settings.RAG["EMBEDDING_MODEL"], input=texts
+    )
     return [item.embedding for item in response.data]
 
 
+def generate_embeddings(texts: list[str]) -> list[list[float]]:
+    """Generate embeddings, batching by EMBED_BATCH_SIZE and retrying on rate limits."""
+    batch_size = settings.RAG["EMBED_BATCH_SIZE"]
+    out: list[list[float]] = []
+    try:
+        for i in range(0, len(texts), batch_size):
+            out.extend(_embed_batch(texts[i : i + batch_size]))
+    except (RateLimitError, APIError) as e:
+        raise RAGEmbeddingError(str(e)) from e
+    return out
+
+
 def index_website(website: Website) -> None:
-    """Index a website's content for RAG by creating chunks and embeddings."""
+    """Chunk + embed a website's content, replacing any prior Chunk rows.
+
+    No-op when content and embedding model match the last indexed state.
+    """
     if not website.content:
         return
 
-    chunks = chunk_text(website.content)
-    embeddings = generate_embeddings(chunks)
+    content_hash = hashlib.sha256(website.content.encode()).hexdigest()
+    model = settings.RAG["EMBEDDING_MODEL"]
+    if website.content_hash == content_hash and website.indexed_with_model == model:
+        return
 
-    website.chunks = chunks
-    website.embeddings = embeddings
-    website.is_indexed = True
-    website.save()
+    specs = chunk_markdown(website.content)
+    if not specs:
+        return
 
+    embeddings = generate_embeddings([s.text for s in specs])
 
-def semantic_search(query: str, top_k: int = 5) -> list[dict]:
-    """
-    Perform semantic search across all indexed websites.
-
-    Returns list of results with format:
-    {
-        "website_url": str,
-        "website_id": str,
-        "chunk": str,
-        "similarity_score": float,
-        "chunk_index": int
-    }
-    """
-    query_embedding = generate_embeddings([query])[0]
-    query_vector = np.array(query_embedding)
-
-    results = []
-
-    indexed_websites = Website.objects.filter(is_indexed=True)
-
-    for website in indexed_websites:
-        if not website.embeddings:
-            continue
-
-        embeddings_array = np.array(website.embeddings)
-        similarities = np.dot(embeddings_array, query_vector) / (
-            np.linalg.norm(embeddings_array, axis=1) * np.linalg.norm(query_vector)
-        )
-
-        top_indices = np.argsort(similarities)[::-1][:top_k]
-
-        for idx in top_indices:
-            if similarities[idx] > 0.5:
-                results.append(
-                    {
-                        "website_url": website.url,
-                        "website_id": website.id,
-                        "chunk": website.chunks[idx],
-                        "similarity_score": float(similarities[idx]),
-                        "chunk_index": int(idx),
-                    }
+    with transaction.atomic():
+        website.chunk_set.all().delete()
+        Chunk.objects.bulk_create(
+            [
+                Chunk(
+                    website=website,
+                    chunk_index=i,
+                    text=spec.text,
+                    token_count=spec.token_count,
+                    heading_path=spec.heading_path,
+                    embedding_model=model,
+                    embedding=vec,
                 )
+                for i, (spec, vec) in enumerate(zip(specs, embeddings))
+            ]
+        )
+        website.content_hash = content_hash
+        website.indexed_with_model = model
+        website.save(update_fields=["content_hash", "indexed_with_model"])
 
-    results.sort(key=lambda x: x["similarity_score"], reverse=True)
-    return results[:top_k]
+
+def semantic_search(
+    query: str,
+    top_k: int | None = None,
+    scrape_id: str | None = None,
+) -> list[dict]:
+    """Cosine-distance search over Chunk.embedding with a per-website diversity cap."""
+    top_k = top_k or settings.RAG["TOP_K"]
+    model = settings.RAG["EMBEDDING_MODEL"]
+
+    query_vec = generate_embeddings([query])[0]
+
+    qs = Chunk.objects.filter(embedding_model=model)
+    if scrape_id:
+        qs = qs.filter(website__scrape_id=scrape_id)
+
+    hits = (
+        qs.alias(distance=CosineDistance("embedding", query_vec))
+        .annotate(distance=CosineDistance("embedding", query_vec))
+        .select_related("website")
+        .order_by("distance")[: top_k * 4]
+    )
+
+    results: list[dict] = []
+    per_site: dict[str, int] = {}
+    for chunk in hits:
+        count = per_site.get(chunk.website_id, 0)
+        if count >= 2:
+            continue
+        per_site[chunk.website_id] = count + 1
+        similarity = 1 - float(chunk.distance)
+        results.append(
+            {
+                "website_url": chunk.website.url,
+                "website_id": chunk.website_id,
+                "chunk_id": chunk.id,
+                "chunk": chunk.text,
+                "heading_path": chunk.heading_path,
+                "similarity_score": similarity,
+                "chunk_index": chunk.chunk_index,
+            }
+        )
+        if len(results) >= top_k:
+            break
+
+    min_sim = settings.RAG["MIN_SIMILARITY"]
+    filtered = [r for r in results if r["similarity_score"] >= min_sim]
+    return filtered or results[:top_k]
 
 
-def rag_query(query: str, top_k: int = 5) -> dict:
+def rag_query(query: str, top_k: int | None = None) -> dict:
     """
     Query the RAG system and return answer with website references.
 
@@ -118,16 +176,12 @@ def rag_query(query: str, top_k: int = 5) -> dict:
     {
         "query": str,
         "answer": str,
-        "sources": [
-            {
-                "website_url": str,
-                "website_id": str,
-                "chunk": str,
-                "similarity_score": float
-            }
-        ]
+        "sources": [...],
+        "usage": {"prompt_tokens": int, "completion_tokens": int, ...} | None,
+        "model": str | None,
     }
     """
+    top_k = top_k or settings.RAG["TOP_K"]
     search_results = semantic_search(query, top_k=top_k)
 
     if not search_results:
@@ -135,43 +189,49 @@ def rag_query(query: str, top_k: int = 5) -> dict:
             "query": query,
             "answer": "No relevant information found in indexed websites.",
             "sources": [],
+            "usage": None,
+            "model": None,
         }
 
     context = "\n\n".join(
-        [
-            f"[Source {i + 1}: {result['website_url']}]\n{result['chunk']}"
-            for i, result in enumerate(search_results)
-        ]
+        f"[{i + 1}] {r['website_url']}\n{r['chunk']}"
+        for i, r in enumerate(search_results)
     )
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a helpful assistant that answers questions based on provided context. Always cite which sources you used.",
-            },
-            {
-                "role": "user",
-                "content": f"Based on the following context, answer this question: {query}\n\nContext:\n{context}",
-            },
-        ],
-        temperature=0.7,
-        max_tokens=500,
-    )
+    model = settings.RAG["CHAT_MODEL"]
+    try:
+        response = _client().chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": _SYSTEM_PROMPT},
+                {
+                    "role": "user",
+                    "content": f"Question: {query}\n\nSources:\n{context}",
+                },
+            ],
+            temperature=settings.RAG["CHAT_TEMPERATURE"],
+            max_tokens=settings.RAG["CHAT_MAX_TOKENS"],
+        )
+    except (RateLimitError, APIError) as e:
+        raise RAGGenerationError(str(e)) from e
 
     answer = response.choices[0].message.content
+    usage = response.usage.model_dump() if response.usage else None
 
     return {
         "query": query,
         "answer": answer,
         "sources": [
             {
-                "website_url": result["website_url"],
-                "website_id": result["website_id"],
-                "chunk": result["chunk"],
-                "similarity_score": result["similarity_score"],
+                "website_url": r["website_url"],
+                "website_id": r["website_id"],
+                "chunk_id": r["chunk_id"],
+                "chunk": r["chunk"],
+                "heading_path": r["heading_path"],
+                "similarity_score": r["similarity_score"],
             }
-            for result in search_results
+            for r in search_results
         ],
+        "usage": usage,
+        "model": response.model,
     }

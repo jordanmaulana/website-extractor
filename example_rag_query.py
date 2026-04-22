@@ -7,8 +7,8 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 django.setup()
 
-from scrapes.rag import rag_query
-from scrapes.models import Website
+from scrapes.rag import rag_query  # noqa: E402
+from scrapes.models import Website  # noqa: E402
 
 
 def main():
@@ -18,7 +18,7 @@ def main():
     print("RAG Query Example")
     print("=" * 80)
 
-    indexed_count = Website.objects.filter(is_indexed=True).count()
+    indexed_count = Website.objects.exclude(indexed_with_model="").count()
     total_count = Website.objects.count()
 
     print(f"\nIndexed websites: {indexed_count}/{total_count}")

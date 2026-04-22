@@ -3,6 +3,7 @@
 import json
 import re
 import time
+from collections import Counter
 from urllib.parse import urlparse
 from pathlib import Path
 
@@ -18,6 +19,46 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 from .models import Scrape, Website
+
+
+_PARAGRAPH_SPLIT = re.compile(r"\n\s*\n+")
+
+
+def strip_boilerplate(
+    scrape: Scrape, threshold: float = 0.5, min_pages: int = 5
+) -> int:
+    """Remove paragraphs appearing in >`threshold` fraction of the scrape's pages.
+
+    Catches nav/footer text that survived the BeautifulSoup strip. Does nothing
+    for scrapes smaller than `min_pages` (not enough signal). Returns the total
+    number of paragraphs removed.
+    """
+    websites = list(Website.objects.filter(scrape=scrape).only("id", "content"))
+    n = len(websites)
+    if n < min_pages:
+        return 0
+
+    freq: Counter[str] = Counter()
+    page_paragraphs: list[list[str]] = []
+    for w in websites:
+        paras = [p.strip() for p in _PARAGRAPH_SPLIT.split(w.content) if p.strip()]
+        page_paragraphs.append(paras)
+        for para in set(paras):
+            freq[para] += 1
+
+    cutoff = n * threshold
+    boilerplate = {p for p, c in freq.items() if c > cutoff}
+    if not boilerplate:
+        return 0
+
+    removed = 0
+    for w, paras in zip(websites, page_paragraphs):
+        kept = [p for p in paras if p not in boilerplate]
+        if len(kept) != len(paras):
+            w.content = "\n\n".join(kept).strip()
+            w.save(update_fields=["content"])
+            removed += len(paras) - len(kept)
+    return removed
 
 
 def sanitize_filename(url: str) -> str:
@@ -300,6 +341,11 @@ def scrape_website(
         include_images=include_images,
         use_selenium=use_selenium,
     )
+
+    # Drop nav/footer paragraphs that repeat across most pages.
+    removed = strip_boilerplate(scrape)
+    if removed:
+        print(f"  ✓ Stripped {removed} boilerplate paragraph(s) across pages")
 
     # Get count of websites created
     website_count = Website.objects.filter(scrape=scrape).count()
