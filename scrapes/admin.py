@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Chunk, Scrape, Website
+from .models import Chunk, RAGQueryLog, Scrape, Website
 
 
 @admin.register(Scrape)
@@ -48,4 +48,39 @@ class ChunkAdmin(admin.ModelAdmin):
         "token_count",
         "heading_path",
         "embedding_model",
+    ]
+
+
+@admin.register(RAGQueryLog)
+class RAGQueryLogAdmin(admin.ModelAdmin):
+    list_display = [
+        "id",
+        "query",
+        "top_similarity",
+        "below_threshold",
+        "model",
+        "total_tokens",
+        "retrieval_ms",
+        "generation_ms",
+        "created_on",
+    ]
+    list_filter = ["below_threshold", "model", "created_on"]
+    search_fields = ["query", "answer", "scrape_id"]
+    readonly_fields = [
+        "id",
+        "created_on",
+        "updated_on",
+        "query",
+        "answer",
+        "scrape_id",
+        "top_similarity",
+        "below_threshold",
+        "invalid_citations",
+        "sources",
+        "model",
+        "prompt_tokens",
+        "completion_tokens",
+        "total_tokens",
+        "retrieval_ms",
+        "generation_ms",
     ]

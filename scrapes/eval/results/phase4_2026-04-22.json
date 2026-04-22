@@ -1,0 +1,939 @@
+{
+  "phase": "phase4",
+  "date": "2026-04-22",
+  "summary": {
+    "n": 22,
+    "top_k": 5,
+    "recall_at_1": 0.591,
+    "recall_at_k": 0.591,
+    "mean_top1_similarity": 0.5788,
+    "by_tag": {
+      "factual": {
+        "count": 13,
+        "recall_at_1": 0.692,
+        "recall_at_k": 0.692
+      },
+      "conceptual": {
+        "count": 11,
+        "recall_at_1": 0.636,
+        "recall_at_k": 0.636
+      },
+      "proper_noun": {
+        "count": 8,
+        "recall_at_1": 0.5,
+        "recall_at_k": 0.5
+      },
+      "transactional": {
+        "count": 3,
+        "recall_at_1": 0.667,
+        "recall_at_k": 0.667
+      },
+      "contact": {
+        "count": 1,
+        "recall_at_1": 1.0,
+        "recall_at_k": 1.0
+      },
+      "navigational": {
+        "count": 1,
+        "recall_at_1": 0.0,
+        "recall_at_k": 0.0
+      }
+    }
+  },
+  "entries": [
+    {
+      "id": "uhud-haji-furoda",
+      "query": "Apa itu Haji Furoda?",
+      "tags": [
+        "factual",
+        "conceptual"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/blog/detail/25/apa-itu-haji-furoda-"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/detail/25/apa-itu-haji-furoda-",
+          "similarity": 0.8441852471413968
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/25/apa-itu-haji-furoda-",
+          "similarity": 0.7027278299833732
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/3/news-article",
+          "similarity": 0.510126093452232
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/27/haji-mabrur-balasannya-surga",
+          "similarity": 0.48685404658317566
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/1/haji",
+          "similarity": 0.4770398736000061
+        }
+      ],
+      "hit_positions": [
+        0,
+        1
+      ],
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "top1_similarity": 0.8441852471413968,
+      "latency_ms": 5172.3,
+      "answer": "Haji Furoda adalah program haji yang diatur langsung oleh pemerintah Arab Saudi melalui undangan khusus yang diberikan kepada jamaah haji di luar kuota resmi yang diberikan kepada setiap negara. Dalam program ini, calon jamaah haji tidak melalui alokasi kuota nasional yang biasanya terbatas, melainkan menggunakan visa undangan khusus yang disebut dengan \"visa mujamalah\" atau \"visa undangan\" [1][2]. \n\nKeunggulan dari Haji Furoda termasuk tidak perlu antre lama, fasilitas dan layanan yang lebih baik, serta kepastian keberangkatan yang lebih terjamin karena menggunakan visa undangan khusus [1]."
+    },
+    {
+      "id": "uhud-tahallul",
+      "query": "Apa itu tahallul dalam rangkaian haji dan umrah?",
+      "tags": [
+        "factual",
+        "conceptual"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/blog/detail/14/mengenal-tahallul-dalam-rukun-haji-dan-umrah"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/detail/14/mengenal-tahallul-dalam-rukun-haji-dan-umrah",
+          "similarity": 0.7029139675507257
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/14/mengenal-tahallul-dalam-rukun-haji-dan-umrah",
+          "similarity": 0.7317771771546179
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/38/perjalanan-shafa-dan-marwah",
+          "similarity": 0.6223785414103122
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/31/badal-haji-atau-umrah-dulu",
+          "similarity": 0.6212272142970581
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/31/badal-haji-atau-umrah-dulu",
+          "similarity": 0.6121559224305657
+        }
+      ],
+      "hit_positions": [
+        0,
+        1
+      ],
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "top1_similarity": 0.7029139675507257,
+      "latency_ms": 5638.4,
+      "answer": "Tahallul dalam rangkaian haji dan umrah adalah aktivitas mencukur rambut sebagian atau keseluruhan setelah melaksanakan rukun sa’i. Secara bahasa, tahallul berarti \"menjadi boleh atau halal,\" yang menandakan bahwa jamaah sudah diperbolehkan melakukan hal-hal yang dilarang saat ihram. Tahallul merupakan rukun terakhir dalam ibadah umrah dan menandai selesainya rangkaian ibadah tersebut [1]. \n\nAda dua jenis tahallul: tahallul pertama (awal) dan tahallul kedua (tsani). Tahallul pertama dilakukan setelah jamaah mengerjakan dua dari tiga amalan haji, yaitu melempar jumrah Aqobah dan mencukur rambut, yang mengizinkan mereka untuk melakukan sebagian larangan ihram, kecuali berhubungan suami istri. Sedangkan tahallul tsani dilakukan setelah menyelesaikan ketiga amalan haji, yang mengizinkan jamaah untuk melakukan semua larangan yang sebelumnya dilarang saat ihram [2]."
+    },
+    {
+      "id": "uhud-zamzam",
+      "query": "Apa keutamaan dan fakta unik tentang air zamzam?",
+      "tags": [
+        "factual"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/blog/detail/33/fakta-unik-air-zamzam"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/detail/33/fakta-unik-air-zamzam",
+          "similarity": 0.7551919725587618
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/33/fakta-unik-air-zamzam",
+          "similarity": 0.6981865615793708
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/16/jangan-lewatkan-berdoa-di-tempat-yang-mustajab-berikut-ketika-umrah",
+          "similarity": 0.6425931455551038
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/1/haji",
+          "similarity": 0.6111860529860614
+        },
+        {
+          "url": "https://uhudtour.com/blog",
+          "similarity": 0.6111860529860614
+        }
+      ],
+      "hit_positions": [
+        0,
+        1
+      ],
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "top1_similarity": 0.7551919725587618,
+      "latency_ms": 3787.4,
+      "answer": "Air Zamzam memiliki beberapa keutamaan dan fakta unik. Pertama, air Zamzam dianggap sebagai sebaik-baiknya air di muka bumi dan diberkahi. Dalam sebuah hadist, Nabi Muhammad SAW menyatakan bahwa air Zamzam mengandung \"makanan yang mengenyangkan dan penawar penyakit\" [1]. \n\nSelain itu, air Zamzam diyakini memiliki manfaat kesehatan, seperti mencegah dehidrasi, menurunkan risiko kanker, serta menjaga kesehatan gigi dan tulang [2]. Keistimewaan air Zamzam juga terkait dengan sejarahnya, di mana sumur ini muncul ketika Nabi Ismail menghentakkan kakinya di tanah saat ibunya, Siti Hajar, mencari air [2]. \n\nSecara keseluruhan, air Zamzam tidak hanya dianggap sebagai sumber air biasa, tetapi juga memiliki nilai spiritual dan kesehatan yang tinggi bagi umat Islam."
+    },
+    {
+      "id": "uhud-kain-ihram",
+      "query": "Bagaimana aturan kain ihram bagi laki-laki?",
+      "tags": [
+        "factual",
+        "conceptual"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/blog/detail/51/kain-ihram-untuk-laki-laki"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/detail/51/kain-ihram-untuk-laki-laki",
+          "similarity": 0.6763021582525939
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/51/kain-ihram-untuk-laki-laki",
+          "similarity": 0.6728764796612459
+        },
+        {
+          "url": "https://uhudtour.com/blog",
+          "similarity": 0.5920934445533431
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/14/mengenal-tahallul-dalam-rukun-haji-dan-umrah",
+          "similarity": 0.571895014750343
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/3/news-article",
+          "similarity": 0.5686847171991495
+        }
+      ],
+      "hit_positions": [
+        0,
+        1
+      ],
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "top1_similarity": 0.6763021582525939,
+      "latency_ms": 5018.6,
+      "answer": "Aturan kain ihram bagi laki-laki adalah sebagai berikut:\n\n1. Pakaian ihram terdiri dari dua lembar kain putih yang tidak berjahit, yang digunakan untuk menutup tubuh. Pakaian ini melambangkan kesederhanaan dan kesetaraan di hadapan Allah [1].\n2. Laki-laki tidak diperbolehkan mengenakan pakaian berjahit seperti gamis, surban, celana, penutup kepala, dan sepatu, kecuali jika tidak ada sandal, maka boleh mengenakan sepatu dengan syarat memotong bagian bawah dari mata kaki [1].\n3. Kain ihram harus dikenakan saat memulai ibadah haji atau umrah, dan niat ihram merupakan rukun yang harus dilakukan [2].\n\nDengan demikian, kain ihram bagi laki-laki memiliki aturan yang ketat untuk menjaga kesucian dan kesederhanaan selama pelaksanaan ibadah."
+    },
+    {
+      "id": "uhud-wukuf-arafah",
+      "query": "Kenapa jamaah haji harus wukuf di Arafah?",
+      "tags": [
+        "conceptual"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/blog/detail/36/kenapa-harus-wukuf-di-arafah-"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/detail/36/kenapa-harus-wukuf-di-arafah-",
+          "similarity": 0.7760364376515365
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/36/kenapa-harus-wukuf-di-arafah-",
+          "similarity": 0.7561993090538207
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/3/news-article",
+          "similarity": 0.6190454620982595
+        },
+        {
+          "url": "https://uhudtour.com/blog",
+          "similarity": 0.6190202713704961
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/1/haji",
+          "similarity": 0.6190202713704961
+        }
+      ],
+      "hit_positions": [
+        0,
+        1
+      ],
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "top1_similarity": 0.7760364376515365,
+      "latency_ms": 3010.6,
+      "answer": "Jamaah haji harus wukuf di Arafah karena wukuf di Arafah merupakan bagian paling pokok dari rukun Haji yang tidak boleh ditinggalkan. Jika jamaah tidak berada di Arafah pada waktu yang ditentukan, maka wukuf mereka dianggap tidak sah dan ibadah Haji mereka menjadi tidak valid [1][2]. Selain itu, wukuf di Arafah juga merupakan puncak dari pelaksanaan ibadah Haji, di mana Allah paling banyak membebaskan hamba-Nya dari neraka pada hari tersebut [1]."
+    },
+    {
+      "id": "uhud-mabit",
+      "query": "Apa itu mabit di Muzdalifah dan Mina?",
+      "tags": [
+        "factual",
+        "conceptual"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/blog/detail/39/mabit-di-muzdalifah-mina"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/detail/39/mabit-di-muzdalifah-mina",
+          "similarity": 0.6924259270249582
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/4/berita",
+          "similarity": 0.3797402083873749
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/39/mabit-di-muzdalifah-mina",
+          "similarity": 0.6139325882456773
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/4/berita",
+          "similarity": 0.5048970041750218
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/29/kenapa-harus-ambil-miqat",
+          "similarity": 0.48376891254564025
+        }
+      ],
+      "hit_positions": [
+        0,
+        2
+      ],
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "top1_similarity": 0.6924259270249582,
+      "latency_ms": 4962.8,
+      "answer": "Mabit di Muzdalifah dan Mina adalah bagian penting dari ibadah haji dan merupakan salah satu kewajiban dalam pelaksanaannya. Mabit di Muzdalifah dilakukan setelah pelaksanaan wukuf di Arafah, di mana jamaah haji beristirahat hingga minimal lewat tengah malam setelah melaksanakan shalat Maghrib dan Isya berjamaah. Selama di Muzdalifah, jamaah disunnahkan untuk berzikir, berdoa, dan membaca Al-Quran, serta mempersiapkan diri untuk lempar jumrah keesokan harinya. Jamaah haji yang perempuan dan lansia diperbolehkan untuk melanjutkan perjalanan lebih awal ke Mina jika dalam kondisi sakit, sementara jamaah yang sehat dapat melanjutkan mabit hingga setelah shalat Subuh [1].\n\nSetelah mabit di Muzdalifah, jamaah haji tinggal di Mina hingga tanggal 12 Dzulhijjah bagi yang nafar awwal dan tanggal 13 bagi yang nafar tsani. Di Mina, jamaah melaksanakan ritual lempar jumrah selama 4 hari. Hukum mabit di Muzdalifah dan Mina adalah wajib, dan jika tidak dilaksanakan, jamaah akan dikenakan dam (denda), kecuali ada uzur tertentu [1]."
+    },
+    {
+      "id": "uhud-anak-kecil",
+      "query": "Bolehkah anak kecil ikut ibadah haji atau umroh?",
+      "tags": [
+        "conceptual"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/blog/detail/42/bolehkah-anak-kecil-ikut-beribadah-haji-umroh"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/detail/42/bolehkah-anak-kecil-ikut-beribadah-haji-umroh",
+          "similarity": 0.7638171103888364
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/42/bolehkah-anak-kecil-ikut-beribadah-haji-umroh",
+          "similarity": 0.7487134036696569
+        },
+        {
+          "url": "https://uhudtour.com/blog",
+          "similarity": 0.6942281407797
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/3/news-article",
+          "similarity": 0.6942281407797
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/2/umroh",
+          "similarity": 0.6941922043828368
+        }
+      ],
+      "hit_positions": [
+        0,
+        1
+      ],
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "top1_similarity": 0.7638171103888364,
+      "latency_ms": 2981.6,
+      "answer": "Ya, anak kecil boleh ikut ibadah Haji atau Umroh. Haji dan Umroh yang dilakukan oleh anak kecil adalah sah, tetapi tidak menggugurkan kewajiban Haji dan Umroh setelah anak tersebut mencapai usia baligh. Orang tua bertanggung jawab untuk membimbing anak dan memastikan mereka melaksanakan seluruh rukun Haji dan Umrah dengan benar. Tidak ada batasan usia minimal yang ditetapkan oleh Kementerian Haji dan Umrah Arab Saudi untuk anak-anak yang ingin melaksanakan Haji dan Umroh, namun ada ketentuan dan persyaratan khusus yang perlu dipenuhi, seperti pendampingan oleh orang dewasa, surat izin dari orang tua, dan mempertimbangkan kesiapan fisik dan mental anak [1][2]."
+    },
+    {
+      "id": "uhud-muthawif",
+      "query": "Siapa itu muthawif?",
+      "tags": [
+        "factual",
+        "proper_noun"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/blog/detail/44/siapa-itu-muthawif"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/detail/44/siapa-itu-muthawif",
+          "similarity": 0.7020016976967315
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/2/umroh",
+          "similarity": 0.4884221460785243
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/1/haji",
+          "similarity": 0.4884221460785243
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/3/news-article",
+          "similarity": 0.4884131265330799
+        },
+        {
+          "url": "https://uhudtour.com/blog",
+          "similarity": 0.4884131265330799
+        }
+      ],
+      "hit_positions": [
+        0
+      ],
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "top1_similarity": 0.7020016976967315,
+      "latency_ms": 3473.0,
+      "answer": "Muthawif adalah pemandu atau pembimbing ibadah haji dan umroh yang bertugas untuk membimbing, memberikan penjelasan, dan memastikan jamaah menjalankan seluruh rangkaian ibadah sesuai dengan tuntunan agama Islam. Muthawif juga berperan sebagai penerjemah dan penjelas sejarah tempat-tempat bersejarah di tanah suci, serta memberikan dukungan moril kepada jamaah. Mereka memiliki fokus pada bimbingan keagamaan dan telah mengikuti sertifikasi untuk menjalankan peran ini [1]."
+    },
+    {
+      "id": "uhud-hotel-review",
+      "query": "Rekomendasi hotel dekat Masjidil Haram dan Masjid Nabawi",
+      "tags": [
+        "factual",
+        "proper_noun"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/blog/detail/43/review-hotel-dekat-masjidil-haram-dan-masjid-nabawi"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/detail/43/review-hotel-dekat-masjidil-haram-dan-masjid-nabawi",
+          "similarity": 0.7168381999787274
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/43/review-hotel-dekat-masjidil-haram-dan-masjid-nabawi",
+          "similarity": 0.6352241882965312
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah/detail/278/05-agustus-2026-sirah-nabawiyah",
+          "similarity": 0.5891996082552888
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah/detail/278/05-agustus-2026-sirah-nabawiyah",
+          "similarity": 0.5847710820267141
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/2/umroh",
+          "similarity": 0.5578736112552081
+        }
+      ],
+      "hit_positions": [
+        0,
+        1
+      ],
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "top1_similarity": 0.7168381999787274,
+      "latency_ms": 3627.1,
+      "answer": "Berikut adalah rekomendasi hotel dekat Masjidil Haram dan Masjid Nabawi:\n\n1. **Intercontinental Dar Tawhid** - Hotel bintang 5 yang terletak di sekitar Masjidil Haram di Mekah. Dari lobby hotel, tamu dapat langsung menuju halaman Masjid Al Haram, dengan pemandangan kesibukan masjid dari kamar hotel [1].\n\n2. **Hilton Hotel** - Hotel bintang 5 yang berlokasi dekat dengan Masjid Nabawi di Madinah. Jaraknya hanya dua menit berjalan kaki menuju masjid, memudahkan akses bagi para jamaah [2]. \n\nKedua hotel ini dikenal karena kenyamanan dan kemewahannya, serta lokasi yang sangat strategis untuk melaksanakan ibadah."
+    },
+    {
+      "id": "uhud-daftar-haji-app",
+      "query": "Bagaimana cara daftar haji tahap dua lewat aplikasi Arab Saudi?",
+      "tags": [
+        "conceptual"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/blog/detail/23/daftar-haji-tahap-dua-via-aplikasi"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/kategori/3/news-article",
+          "similarity": 0.633061230292607
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/25/apa-itu-haji-furoda-",
+          "similarity": 0.6109656270927631
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/25/apa-itu-haji-furoda-",
+          "similarity": 0.6091042408707708
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/badal-haji",
+          "similarity": 0.5467056890798583
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah/detail/283/25-juni-2026-bronze",
+          "similarity": 0.542239627941823
+        }
+      ],
+      "hit_positions": [],
+      "recall_at_1": false,
+      "recall_at_k": false,
+      "top1_similarity": 0.633061230292607,
+      "latency_ms": 1833.3,
+      "answer": "Saya tidak menemukan informasi spesifik tentang cara mendaftar haji tahap dua lewat aplikasi Arab Saudi dalam sumber yang diberikan. Untuk informasi lebih lanjut, Anda mungkin perlu mencari di sumber resmi atau situs web terkait."
+    },
+    {
+      "id": "uhud-badal-haji",
+      "query": "Apa itu badal haji dan bagaimana layanannya?",
+      "tags": [
+        "transactional",
+        "conceptual"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/blog/detail/31/badal-haji-atau-umrah-dulu",
+        "https://uhudtour.com/transaksi/badal-haji"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/transaksi/badal-haji",
+          "similarity": 0.6962356310207646
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/31/badal-haji-atau-umrah-dulu",
+          "similarity": 0.6909323455668321
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/31/badal-haji-atau-umrah-dulu",
+          "similarity": 0.646481877183276
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/badal-umrah",
+          "similarity": 0.5977602575471873
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/badal-haji",
+          "similarity": 0.59345913302016
+        }
+      ],
+      "hit_positions": [
+        0,
+        1,
+        2,
+        4
+      ],
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "top1_similarity": 0.6962356310207646,
+      "latency_ms": 4025.4,
+      "answer": "Badal haji adalah pelaksanaan ibadah haji oleh seseorang atas nama orang lain yang tidak mampu melakukannya sendiri, baik karena telah meninggal dunia atau menderita sakit parah yang tidak dapat diharapkan kesembuhannya. Dalam Islam, badal haji diperbolehkan untuk satu orang saja yang memenuhi syarat tertentu, seperti sudah pernah melaksanakan haji untuk dirinya sendiri dan memenuhi syarat-syarat haji lainnya [1][2].\n\nLayanan badal haji biasanya disediakan oleh travel haji dan umrah, seperti Uhud Tour, yang menawarkan paket badal haji dengan biaya yang terjangkau. Mereka memastikan pelaksanaan ibadah sesuai dengan Al-Qur'an dan As-Sunnah, serta dikerjakan oleh ahlinya. Selain itu, setelah pelaksanaan, biasanya akan diberikan sertifikat sebagai bukti [3][5]."
+    },
+    {
+      "id": "uhud-paket-umrah-juli",
+      "query": "Paket umrah keberangkatan bulan Juli 2026",
+      "tags": [
+        "transactional",
+        "proper_noun"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/transaksi/paket-umrah",
+        "https://uhudtour.com/transaksi/paket-umrah/detail/274/02-juli-2026-bronze",
+        "https://uhudtour.com/transaksi/paket-umrah/detail/275/15-juli-2026-gold"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah",
+          "similarity": 0.6742366457093967
+        },
+        {
+          "url": "https://uhudtour.com",
+          "similarity": 0.6403283610917194
+        },
+        {
+          "url": "https://uhudtour.com/",
+          "similarity": 0.6403283610917194
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah",
+          "similarity": 0.6266530740746803
+        },
+        {
+          "url": "https://uhudtour.com",
+          "similarity": 0.6134616734466285
+        }
+      ],
+      "hit_positions": [
+        0,
+        3
+      ],
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "top1_similarity": 0.6742366457093967,
+      "latency_ms": 6767.3,
+      "answer": "Untuk paket umrah keberangkatan bulan Juli 2026, berikut adalah informasi yang tersedia:\n\n1. **02 Juli 2026** - Paket Bronze\n   - Hotel: Al Shohada Hotel (Makkah) dan Concorde Dar Al Khair Hotel (Madinah)\n   - Maskapai: Garuda Indonesia\n   - Bandara: Soekarno-Hatta International Airport (CGK)\n   - Sisa Seat: 0\n   - Harga mulai: IDR 0,00 [1]\n\n2. **15 Juli 2026** - Paket Gold\n   - Hotel: Jumeirah Jabal Omar (Makkah) dan Peninsula Worth (Madinah)\n   - Maskapai: Garuda Indonesia\n   - Bandara: Soekarno-Hatta International Airport (CGK)\n   - Sisa Seat: 26\n   - Harga mulai: IDR 46.150.000,00 [1]\n\n3. **30 Juli 2026** - Paket Bronze\n   - Hotel: Al Shohada Hotel (Makkah) dan Concorde Dar Al Khair Hotel (Madinah)\n   - Maskapai: Garuda Indonesia\n   - Bandara: Soekarno-Hatta International Airport (CGK)\n   - Sisa Seat: 14\n   - Harga mulai: IDR 37.500.000,00 [1]\n\nSilakan pilih paket yang sesuai dengan kebutuhan Anda."
+    },
+    {
+      "id": "uhud-tentang-kami",
+      "query": "Siapa pendiri Uhud Tour?",
+      "tags": [
+        "factual",
+        "proper_noun"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/halaman/tentang-kami"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/halaman/tentang-kami",
+          "similarity": 0.6102332010079337
+        },
+        {
+          "url": "https://uhudtour.com/hubungi-kami",
+          "similarity": 0.5822556087293619
+        },
+        {
+          "url": "https://uhudtour.com/hubungi-kami",
+          "similarity": 0.5629267424552992
+        },
+        {
+          "url": "https://uhudtour.com/testimonial",
+          "similarity": 0.5561191603613143
+        },
+        {
+          "url": "https://uhudtour.com/testimonial",
+          "similarity": 0.5371807112093006
+        }
+      ],
+      "hit_positions": [
+        0
+      ],
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "top1_similarity": 0.6102332010079337,
+      "latency_ms": 1286.2,
+      "answer": "Pendiri Uhud Tour adalah Ustadz Khalid Basalamah [1]."
+    },
+    {
+      "id": "uhud-kontak",
+      "query": "Nomor telepon dan alamat kantor pusat Uhud Tour",
+      "tags": [
+        "contact",
+        "factual"
+      ],
+      "expected_urls": [
+        "https://uhudtour.com/hubungi-kami"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/hubungi-kami",
+          "similarity": 0.6958035235473873
+        },
+        {
+          "url": "https://uhudtour.com/hubungi-kami",
+          "similarity": 0.6753712583431934
+        },
+        {
+          "url": "https://uhudtour.com/",
+          "similarity": 0.5514524761505282
+        },
+        {
+          "url": "https://uhudtour.com",
+          "similarity": 0.5514524761505282
+        },
+        {
+          "url": "https://uhudtour.com/halaman/tentang-kami",
+          "similarity": 0.5406681858920583
+        }
+      ],
+      "hit_positions": [
+        0,
+        1
+      ],
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "top1_similarity": 0.6958035235473873,
+      "latency_ms": 1621.1,
+      "answer": "Kantor pusat Uhud Tour beralamat di Jl. Raya Condet No.50, Kel. Batu Ampar, Jakarta Timur, DKI Jakarta, Indonesia, 13520. Nomor telepon yang dapat dihubungi adalah 081113304343 [1][2]."
+    },
+    {
+      "id": "sisi-harga-erp",
+      "query": "Berapa harga paket berlangganan Forca ERP?",
+      "tags": [
+        "transactional",
+        "proper_noun"
+      ],
+      "expected_urls": [
+        "https://sisi.id/harga-forca-erp"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/transaksi/paket-haji",
+          "similarity": 0.3661128208530967
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah/detail/275/15-juli-2026-gold",
+          "similarity": 0.35644805406357416
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah/detail/277/03-agustus-2026-bronze",
+          "similarity": 0.34684891521464256
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah/detail/283/25-juni-2026-bronze",
+          "similarity": 0.3468095893397445
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah/detail/283/25-juni-2026-bronze",
+          "similarity": 0.3468095893397445
+        }
+      ],
+      "hit_positions": [],
+      "recall_at_1": false,
+      "recall_at_k": false,
+      "top1_similarity": 0.3661128208530967,
+      "latency_ms": 251.7,
+      "answer": "No relevant information found in indexed websites."
+    },
+    {
+      "id": "sisi-forca-hr",
+      "query": "Apa saja fitur utama aplikasi Forca HR?",
+      "tags": [
+        "factual",
+        "proper_noun"
+      ],
+      "expected_urls": [
+        "https://sisi.id/solutions/digital-solution/forca-hr"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/detail/25/apa-itu-haji-furoda-",
+          "similarity": 0.3900132775156414
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/25/apa-itu-haji-furoda-",
+          "similarity": 0.38449211551699336
+        },
+        {
+          "url": "https://admin.uhudtour.com/",
+          "similarity": 0.35782195590074717
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/3/news-article",
+          "similarity": 0.3531489566441255
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/44/siapa-itu-muthawif",
+          "similarity": 0.35143440196455256
+        }
+      ],
+      "hit_positions": [],
+      "recall_at_1": false,
+      "recall_at_k": false,
+      "top1_similarity": 0.3900132775156414,
+      "latency_ms": 230.3,
+      "answer": "No relevant information found in indexed websites."
+    },
+    {
+      "id": "sisi-forca-pos",
+      "query": "Aplikasi point-of-sale untuk transaksi penjualan dan pembelian",
+      "tags": [
+        "conceptual"
+      ],
+      "expected_urls": [
+        "https://sisi.id/solutions/digital-solution/forca-pos"
+      ],
+      "retrieved": [
+        {
+          "url": "https://admin.uhudtour.com/",
+          "similarity": 0.39997393347361543
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-katering",
+          "similarity": 0.3547859982101038
+        },
+        {
+          "url": "https://uhudtour.com/hubungi-kami",
+          "similarity": 0.34976356819555554
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/hotel",
+          "similarity": 0.32368771875091773
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah/detail/278/05-agustus-2026-sirah-nabawiyah",
+          "similarity": 0.3103205579254782
+        }
+      ],
+      "hit_positions": [],
+      "recall_at_1": false,
+      "recall_at_k": false,
+      "top1_similarity": 0.39997393347361543,
+      "latency_ms": 338.5,
+      "answer": "No relevant information found in indexed websites."
+    },
+    {
+      "id": "sisi-epoool",
+      "query": "Apa itu EPOOOL?",
+      "tags": [
+        "factual",
+        "proper_noun"
+      ],
+      "expected_urls": [
+        "https://sisi.id/solutions/digital-solution/epoool"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/detail/50/buku-bacaan-sebelum-umroh",
+          "similarity": 0.2797301388675091
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah/detail/275/15-juli-2026-gold",
+          "similarity": 0.27202909653226914
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah/detail/274/02-juli-2026-bronze",
+          "similarity": 0.2692120504948353
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah/detail/277/03-agustus-2026-bronze",
+          "similarity": 0.2684661655371934
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah/detail/274/02-juli-2026-bronze",
+          "similarity": 0.26807212216686427
+        }
+      ],
+      "hit_positions": [],
+      "recall_at_1": false,
+      "recall_at_k": false,
+      "top1_similarity": 0.2797301388675091,
+      "latency_ms": 339.7,
+      "answer": "No relevant information found in indexed websites."
+    },
+    {
+      "id": "sisi-didirikan",
+      "query": "Kapan SISI didirikan?",
+      "tags": [
+        "factual"
+      ],
+      "expected_urls": [
+        "https://sisi.id/about-us"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/detail/49/kepergian-mulia-di-tanah-suci-wafat-saat-umroh-di-mekkah",
+          "similarity": 0.27173297016031306
+        },
+        {
+          "url": "https://uhudtour.com/hubungi-kami",
+          "similarity": 0.26494971051622374
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/34/apa-itu-hijir-ismail",
+          "similarity": 0.2602313992426364
+        },
+        {
+          "url": "https://uhudtour.com/blog/kategori/2/umroh",
+          "similarity": 0.25681605628291215
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/44/siapa-itu-muthawif",
+          "similarity": 0.2414275823304689
+        }
+      ],
+      "hit_positions": [],
+      "recall_at_1": false,
+      "recall_at_k": false,
+      "top1_similarity": 0.27173297016031306,
+      "latency_ms": 659.0,
+      "answer": "No relevant information found in indexed websites."
+    },
+    {
+      "id": "sisi-palmco",
+      "query": "Kerja sama SISI dengan PalmCo PTPN IV untuk seat management",
+      "tags": [
+        "proper_noun",
+        "factual"
+      ],
+      "expected_urls": [
+        "https://sisi.id/stories/press-release/palmco-ptpn-iv-dan-sisi-jalin-kerja-sama-seat-management-untuk-optimalkan-operasional-bisnis"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/",
+          "similarity": 0.36767355457081985
+        },
+        {
+          "url": "https://uhudtour.com",
+          "similarity": 0.36767355457081985
+        },
+        {
+          "url": "https://uhudtour.com/hubungi-kami",
+          "similarity": 0.3642349421869011
+        },
+        {
+          "url": "https://uhudtour.com/hubungi-kami",
+          "similarity": 0.3642119334560725
+        },
+        {
+          "url": "https://uhudtour.com/",
+          "similarity": 0.3563994141683654
+        }
+      ],
+      "hit_positions": [],
+      "recall_at_1": false,
+      "recall_at_k": false,
+      "top1_similarity": 0.36767355457081985,
+      "latency_ms": 457.7,
+      "answer": "No relevant information found in indexed websites."
+    },
+    {
+      "id": "sisi-digital-maturity",
+      "query": "Apa itu digital maturity dan tahapan transformasi digital?",
+      "tags": [
+        "conceptual"
+      ],
+      "expected_urls": [
+        "https://sisi.id/stories/insight/apa-itu-digital-maturity-tahapan-strategi-transformasi-digital-perusahaan"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/blog/detail/44/siapa-itu-muthawif",
+          "similarity": 0.347344120457838
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/41/kesalahan-saat-haji-umroh",
+          "similarity": 0.32104063523599846
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/44/siapa-itu-muthawif",
+          "similarity": 0.2984486650270439
+        },
+        {
+          "url": "https://admin.uhudtour.com/",
+          "similarity": 0.27886298812913135
+        },
+        {
+          "url": "https://uhudtour.com/blog/detail/41/kesalahan-saat-haji-umroh",
+          "similarity": 0.26965962276883704
+        }
+      ],
+      "hit_positions": [],
+      "recall_at_1": false,
+      "recall_at_k": false,
+      "top1_similarity": 0.347344120457838,
+      "latency_ms": 238.0,
+      "answer": "No relevant information found in indexed websites."
+    },
+    {
+      "id": "sisi-shared-service",
+      "query": "Layanan shared services untuk efisiensi operasional bisnis",
+      "tags": [
+        "conceptual",
+        "navigational"
+      ],
+      "expected_urls": [
+        "https://sisi.id/solutions/shared-service",
+        "https://sisi.id/solutions/shared-services"
+      ],
+      "retrieved": [
+        {
+          "url": "https://uhudtour.com/hubungi-kami",
+          "similarity": 0.3720861046212105
+        },
+        {
+          "url": "https://uhudtour.com/hubungi-kami",
+          "similarity": 0.345589013832746
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/paket-umrah/detail/278/05-agustus-2026-sirah-nabawiyah",
+          "similarity": 0.34303314830389176
+        },
+        {
+          "url": "https://uhudtour.com/transaksi/hotel",
+          "similarity": 0.34127469110229935
+        },
+        {
+          "url": "https://uhudtour.com/testimonial",
+          "similarity": 0.33879381258346386
+        }
+      ],
+      "hit_positions": [],
+      "recall_at_1": false,
+      "recall_at_k": false,
+      "top1_similarity": 0.3720861046212105,
+      "latency_ms": 223.6,
+      "answer": "No relevant information found in indexed websites."
+    }
+  ]
+}

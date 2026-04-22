@@ -1,3 +1,6 @@
+from django.conf import settings
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from pgvector.django import HnswIndex, VectorField
 
@@ -33,7 +36,8 @@ class Chunk(BaseModel):
     token_count = models.PositiveIntegerField()
     heading_path = models.JSONField(default=list, blank=True)
     embedding_model = models.CharField(max_length=64)
-    embedding = VectorField(dimensions=1536)
+    embedding = VectorField(dimensions=settings.RAG["EMBEDDING_DIMS"])
+    search_vector = SearchVectorField(null=True)
 
     class Meta:
         unique_together = ["website", "chunk_index"]
@@ -46,4 +50,29 @@ class Chunk(BaseModel):
                 ef_construction=64,
                 opclasses=["vector_cosine_ops"],
             ),
+            GinIndex(fields=["search_vector"], name="chunk_search_gin"),
+        ]
+
+
+class RAGQueryLog(BaseModel):
+    """One row per `rag_query` call for audit and debugging."""
+
+    query = models.TextField()
+    answer = models.TextField(blank=True, default="")
+    scrape_id = models.CharField(max_length=64, blank=True, default="")
+    top_similarity = models.FloatField(null=True, blank=True)
+    below_threshold = models.BooleanField(default=False)
+    invalid_citations = models.JSONField(default=list, blank=True)
+    sources = models.JSONField(default=list, blank=True)
+    model = models.CharField(max_length=64, blank=True, default="")
+    prompt_tokens = models.PositiveIntegerField(null=True, blank=True)
+    completion_tokens = models.PositiveIntegerField(null=True, blank=True)
+    total_tokens = models.PositiveIntegerField(null=True, blank=True)
+    retrieval_ms = models.FloatField(null=True, blank=True)
+    generation_ms = models.FloatField(null=True, blank=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["created_on"]),
+            models.Index(fields=["below_threshold"]),
         ]
