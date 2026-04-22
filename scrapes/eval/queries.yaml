@@ -1,0 +1,166 @@
+# Evaluation set for the RAG pipeline.
+#
+# Each entry names a real question and the URL(s) that should appear in the
+# top-K retrieval. A query "passes" when any expected URL is retrieved.
+#
+# Corpus at time of writing: two scrapes
+#   - https://uhudtour.com/  (55 pages — Indonesian Umrah/Hajj travel agent)
+#   - https://sisi.id        (68 pages — Indonesian B2B ERP / Forca product)
+#
+# `tags` categorize queries for per-category regression analysis:
+#   factual        — direct lookup of a concept defined on one page
+#   conceptual     — reasoning/definition question, semantic match matters
+#   proper_noun    — keyword-heavy; vector search tends to miss these
+#                    (this is the bucket Phase 4 hybrid FTS is meant to fix)
+#   transactional  — product/package/pricing pages
+#   contact        — hours, phone, address
+#   navigational   — hub/landing/listing pages
+#
+# URL normalization note: several pages were scraped with both trailing-slash
+# and no-trailing-slash variants (same content, different rows). Where that
+# is the case, both are listed as acceptable hits so the eval is not punished
+# by a cosmetic URL difference.
+
+queries:
+  # ---- uhudtour.com: factual / conceptual (pilgrimage) ----
+  - id: uhud-haji-furoda
+    query: "Apa itu Haji Furoda?"
+    expected_urls:
+      - https://uhudtour.com/blog/detail/25/apa-itu-haji-furoda-
+    tags: [factual, conceptual]
+
+  - id: uhud-tahallul
+    query: "Apa itu tahallul dalam rangkaian haji dan umrah?"
+    expected_urls:
+      - https://uhudtour.com/blog/detail/14/mengenal-tahallul-dalam-rukun-haji-dan-umrah
+    tags: [factual, conceptual]
+
+  - id: uhud-zamzam
+    query: "Apa keutamaan dan fakta unik tentang air zamzam?"
+    expected_urls:
+      - https://uhudtour.com/blog/detail/33/fakta-unik-air-zamzam
+    tags: [factual]
+
+  - id: uhud-kain-ihram
+    query: "Bagaimana aturan kain ihram bagi laki-laki?"
+    expected_urls:
+      - https://uhudtour.com/blog/detail/51/kain-ihram-untuk-laki-laki
+    tags: [factual, conceptual]
+
+  - id: uhud-wukuf-arafah
+    query: "Kenapa jamaah haji harus wukuf di Arafah?"
+    expected_urls:
+      - https://uhudtour.com/blog/detail/36/kenapa-harus-wukuf-di-arafah-
+    tags: [conceptual]
+
+  - id: uhud-mabit
+    query: "Apa itu mabit di Muzdalifah dan Mina?"
+    expected_urls:
+      - https://uhudtour.com/blog/detail/39/mabit-di-muzdalifah-mina
+    tags: [factual, conceptual]
+
+  - id: uhud-anak-kecil
+    query: "Bolehkah anak kecil ikut ibadah haji atau umroh?"
+    expected_urls:
+      - https://uhudtour.com/blog/detail/42/bolehkah-anak-kecil-ikut-beribadah-haji-umroh
+    tags: [conceptual]
+
+  - id: uhud-muthawif
+    query: "Siapa itu muthawif?"
+    expected_urls:
+      - https://uhudtour.com/blog/detail/44/siapa-itu-muthawif
+    tags: [factual, proper_noun]
+
+  - id: uhud-hotel-review
+    query: "Rekomendasi hotel dekat Masjidil Haram dan Masjid Nabawi"
+    expected_urls:
+      - https://uhudtour.com/blog/detail/43/review-hotel-dekat-masjidil-haram-dan-masjid-nabawi
+    tags: [factual, proper_noun]
+
+  - id: uhud-daftar-haji-app
+    query: "Bagaimana cara daftar haji tahap dua lewat aplikasi Arab Saudi?"
+    expected_urls:
+      - https://uhudtour.com/blog/detail/23/daftar-haji-tahap-dua-via-aplikasi
+    tags: [conceptual]
+
+  # ---- uhudtour.com: transactional / contact ----
+  - id: uhud-badal-haji
+    query: "Apa itu badal haji dan bagaimana layanannya?"
+    expected_urls:
+      - https://uhudtour.com/transaksi/badal-haji
+      - https://uhudtour.com/blog/detail/31/badal-haji-atau-umrah-dulu
+    tags: [transactional, conceptual]
+
+  - id: uhud-paket-umrah-juli
+    query: "Paket umrah keberangkatan bulan Juli 2026"
+    expected_urls:
+      - https://uhudtour.com/transaksi/paket-umrah
+      - https://uhudtour.com/transaksi/paket-umrah/detail/274/02-juli-2026-bronze
+      - https://uhudtour.com/transaksi/paket-umrah/detail/275/15-juli-2026-gold
+    tags: [transactional, proper_noun]
+
+  - id: uhud-tentang-kami
+    query: "Siapa pendiri Uhud Tour?"
+    expected_urls:
+      - https://uhudtour.com/halaman/tentang-kami
+    tags: [factual, proper_noun]
+    notes: "Answer is Ustadz Khalid Basalamah — proper noun that vector search may miss."
+
+  - id: uhud-kontak
+    query: "Nomor telepon dan alamat kantor pusat Uhud Tour"
+    expected_urls:
+      - https://uhudtour.com/hubungi-kami
+    tags: [contact, factual]
+
+  # ---- sisi.id: product / pricing / about ----
+  - id: sisi-harga-erp
+    query: "Berapa harga paket berlangganan Forca ERP?"
+    expected_urls:
+      - https://sisi.id/harga-forca-erp
+      - https://sisi.id/harga-forca-erp/
+    tags: [transactional, proper_noun]
+
+  - id: sisi-forca-hr
+    query: "Apa saja fitur utama aplikasi Forca HR?"
+    expected_urls:
+      - https://sisi.id/solutions/digital-solution/forca-hr/
+    tags: [factual, proper_noun]
+
+  - id: sisi-forca-pos
+    query: "Aplikasi point-of-sale untuk transaksi penjualan dan pembelian"
+    expected_urls:
+      - https://sisi.id/solutions/digital-solution/forca-pos/
+    tags: [conceptual]
+    notes: "Phrased semantically (no 'Forca POS' keyword) so vector search should carry this."
+
+  - id: sisi-epoool
+    query: "Apa itu EPOOOL?"
+    expected_urls:
+      - https://sisi.id/solutions/digital-solution/epoool/
+    tags: [factual, proper_noun]
+    notes: "Rare proper noun — strong test for FTS once Phase 4 lands."
+
+  - id: sisi-didirikan
+    query: "Kapan SISI didirikan?"
+    expected_urls:
+      - https://sisi.id/about-us/
+    tags: [factual]
+
+  - id: sisi-palmco
+    query: "Kerja sama SISI dengan PalmCo PTPN IV untuk seat management"
+    expected_urls:
+      - https://sisi.id/stories/press-release/palmco-ptpn-iv-dan-sisi-jalin-kerja-sama-seat-management-untuk-optimalkan-operasional-bisnis/
+    tags: [proper_noun, factual]
+
+  - id: sisi-digital-maturity
+    query: "Apa itu digital maturity dan tahapan transformasi digital?"
+    expected_urls:
+      - https://sisi.id/stories/insight/apa-itu-digital-maturity-tahapan-strategi-transformasi-digital-perusahaan/
+    tags: [conceptual]
+
+  - id: sisi-shared-service
+    query: "Layanan shared services untuk efisiensi operasional bisnis"
+    expected_urls:
+      - https://sisi.id/solutions/shared-service/
+      - https://sisi.id/solutions/shared-services/
+    tags: [conceptual, navigational]
